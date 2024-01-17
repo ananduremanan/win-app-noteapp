@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "Segoe";
+  src: url("../public/asstes/fonts/Segoe\ UI.ttf") format("truetype");
+}
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -18,10 +23,23 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  background: #f9f9f9;
+  font-family: "Segoe", sans-serif;
+}
+
+.children-wrapper {
+  color: rgb(var(--foreground-rgb));
+  background: #f9f9f9;
+}
+
+.drawer {
+  background-color: #f3f3f3;
+}
+
+.drawer-item:hover {
+  background-color: #eaeaea;
+}
+
+.fab {
+  background-color: #eaeaea;
 }
