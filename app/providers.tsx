@@ -8,6 +8,7 @@ import {
   RendererProvider,
   createDOMRenderer,
   renderToStyleElements,
+  webLightTheme,
 } from "@fluentui/react-components";
 import { useServerInsertedHTML } from "next/navigation";
 
@@ -21,7 +22,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <RendererProvider renderer={renderer}>
       <SSRProvider>
-        <FluentProvider theme={teamsDarkTheme} className="ml-1">
+        <FluentProvider theme={webLightTheme} className="ml-1">
           {children}
         </FluentProvider>
       </SSRProvider>
