@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="flex h-screen overflow-hidden">
-        <div className="flex-shrink-0">
+        <div className="flex-shrink-0 hidden md:block">
           <Drawer />
         </div>
         <div className="flex flex-col flex-grow">
