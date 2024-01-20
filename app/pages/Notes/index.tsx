@@ -13,6 +13,8 @@ import {
 import Icon from "@mdi/react";
 import { mdiEarth } from "@mdi/js";
 import Link from "next/link";
+import { mdiPencil } from "@mdi/js";
+import { mdiDelete } from "@mdi/js";
 
 const useStyles = makeStyles({
   card: {
@@ -36,6 +38,7 @@ const useStyles = makeStyles({
     width: "100%",
     marginTop: "10px",
   },
+  title: {},
 });
 
 export default function Notes() {
@@ -79,8 +82,71 @@ export default function Notes() {
             </div>
           </div>
         </div>
-        <div className="bg-white">Notes</div>
-        <Link href="/Reminder">Reminder</Link>
+        <div className="bg-white mt-2 p-4 rounded-md">
+          <div className="flex justify-between">
+            <div>
+              <Body1Strong>A Note On Human Behaviour</Body1Strong>
+            </div>
+            <div className="flex gap-2">
+              <Button>
+                <Icon path={mdiPencil} size={0.8} />
+                Edit
+              </Button>
+              <Button>
+                <Icon path={mdiDelete} size={0.8} />
+                Delete
+              </Button>
+            </div>
+          </div>
+          <div className="text-justify mt-4">
+            <Body1>
+              Introduction: Human behavior is a complex and fascinating subject
+              that encompasses a wide range of actions, thoughts, and emotions.
+              Understanding human behavior is crucial in various fields,
+              including psychology, sociology, anthropology, and even in
+              everyday interactions. It helps us comprehend ourselves and
+              others, navigate social situations, and make informed decisions.
+              Factors Influencing Human Behavior: Several factors influence
+              human behavior, including genetics, environment, culture, and
+              individual experiences. Genetic predispositions can influence
+              traits and tendencies, while the environment, including upbringing
+              and social interactions, shapes behavior. Cultural norms and
+              values also play a significant role in determining acceptable
+              behavior within a society. Patterns and Variability: While there
+              are patterns in human behavior that can be generalized, it's
+              essential to acknowledge the variability among individuals. Each
+              person is unique, with their own set of experiences, beliefs, and
+              motivations that shape their behavior. Therefore, while
+              generalizations can be useful, they should be approached with
+              caution to avoid oversimplification or stereotypes. Motivations
+              and Needs: Human behavior is often driven by underlying
+              motivations and needs. These can include basic physiological needs
+              such as food and shelter, as well as higher-level needs like
+              belongingness, esteem, and self-actualization, as proposed by
+              Abraham Maslow's hierarchy of needs. Understanding these
+              motivations can provide insights into why people behave in certain
+              ways and what drives their actions. Cognitive and Emotional
+              Factors: Cognition and emotions also play significant roles in
+              shaping human behavior. Cognitive processes such as perception,
+              memory, and decision-making influence how individuals interpret
+              and respond to the world around them. Emotions can affect behavior
+              by influencing mood, motivation, and social interactions. Social
+              Influences: Human behavior is deeply influenced by social factors,
+              including social norms, peer pressure, and cultural expectations.
+              People often conform to group norms and seek social approval,
+              which can impact their behavior. Additionally, social interactions
+              and relationships can significantly shape individual behavior and
+              identity. Conclusion: Understanding human behavior is a
+              multifaceted endeavor that requires consideration of various
+              factors, including genetics, environment, culture, cognition,
+              emotions, and social influences. By studying human behavior, we
+              gain insights into ourselves and others, which can be applied in
+              diverse fields such as psychology, sociology, education, and
+              business to improve our understanding of human nature and enhance
+              our interactions with others.
+            </Body1>
+          </div>
+        </div>
       </div>
     </div>
   );
