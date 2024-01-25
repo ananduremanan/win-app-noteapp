@@ -3,29 +3,22 @@
 import React from "react";
 import Icon from "@mdi/react";
 import { mdiMenu } from "@mdi/js";
-import { mdiWindowClose } from "@mdi/js";
-import { mdiFilePlus, mdiTimerAlert } from "@mdi/js";
 import { VscNotebook } from "react-icons/vsc";
 import { TfiTimer } from "react-icons/tfi";
 import { LiaWalletSolid } from "react-icons/lia";
 import { BsPerson } from "react-icons/bs";
 import { LuSettings } from "react-icons/lu";
-import Image from "next/image";
-import noteapplogo from "../../public/notes.png";
-import { animated, useTransition } from "react-spring";
+import { useTransition } from "react-spring";
 import Link from "next/link";
 
 export default function Drawer() {
   const [isOpen, setIsOpen] = React.useState(false);
-  const [isActive, setIsActive] = React.useState("note");
 
   const transitions: any = useTransition(isOpen, {
     from: { position: "fixed", opacity: 0, width: 0 },
     enter: { opacity: 1, width: 320 },
     leave: { opacity: 0, width: 0 },
   });
-
-  console.log(typeof transitions);
 
   return (
     <div className="drawer h-screen w-14 flex flex-col lg:w-80 p-1 shadow-md	z-10">
@@ -59,16 +52,17 @@ export default function Drawer() {
         </div>
       </div>
       <div className="mt-2">
-        <div
-          className={`flex items-center p-2 drawer-item gap-4 rounded-md mb-1 justify-center lg:justify-start`}
+        <Link
+          href="/"
+          className={`flex items-center p-2 drawer-item gap-4 rounded-md mb-1 justify-center lg:justify-start cursor-default`}
         >
           <VscNotebook />
           <div className="hidden lg:block">Notes</div>
-        </div>
+        </Link>
         <div className="">
           <Link
-            href="/Reminder"
-            className={`flex items-center p-2 drawer-item gap-4 rounded-md mb-1 justify-center lg:justify-start`}
+            href="/pages/Reminder"
+            className={`flex items-center p-2 drawer-item gap-4 rounded-md mb-1 justify-center lg:justify-start cursor-default`}
           >
             <TfiTimer />
             <div className="hidden lg:block">Reminder</div>

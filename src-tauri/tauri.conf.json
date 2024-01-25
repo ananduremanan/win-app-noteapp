@@ -23,6 +23,18 @@
         "startDragging": true,
         "setMinSize": true,
         "setMaxSize": true
+      },
+      "dialog": {
+        "save": true
+      },
+      "path": {
+        "all": true
+      },
+      "fs": {
+        "writeFile": true,
+        "removeFile": true,
+        "readFile": true,
+        "scope": ["$DOCUMENT/*", "$DESKTOP/*"]
       }
     },
     "bundle": {
@@ -40,7 +52,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "nadalabs.noteapp.dev",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
