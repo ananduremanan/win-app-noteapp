@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Input,
@@ -16,6 +16,7 @@ import { useStyles } from "./styles";
 import { signal, useSignal } from "@preact/signals-react";
 import { useSignals } from "@preact/signals-react/runtime";
 import { NoteCreate } from "./NoteCreate";
+import { Store } from "tauri-plugin-store-api";
 
 const isViewNote = signal(true);
 
@@ -39,7 +40,10 @@ const SearchComponent = () => {
   );
 };
 
-const NoteList = () => {
+const NoteList = ({ notes }: any) => {
+  console.clear();
+  console.log(notes);
+
   return (
     <>
       <div className="mt-2 ml-1">
@@ -47,9 +51,14 @@ const NoteList = () => {
         <Divider />
       </div>
       <div className="mt-2 ml-1 flex-col">
-        <div className="drawer-item p-1 rounded-md">
-          <Body1>1. A Note On Human Behaviour</Body1>
-        </div>
+        {notes.length > 0 &&
+          notes.map((note: any, index: number) => (
+            <div className="drawer-item p-1 rounded-md" key={note.fileId}>
+              <Body1>
+                {index + 1}. {note.title}
+              </Body1>
+            </div>
+          ))}
       </div>
     </>
   );
@@ -98,6 +107,8 @@ export default function Notes() {
   useSignals();
   const isNoteView = useSignal(isViewNote);
 
+  const [notes, setNotes] = useState([]);
+
   return (
     <div className="flex flex-row overflow-hidden">
       <div className="flex-col w-1/3">
@@ -106,9 +117,13 @@ export default function Notes() {
           <ButtonComponent>Add New Todo</ButtonComponent>
         </div>
         <SearchComponent />
-        <NoteList />
+        <NoteList notes={notes} />
       </div>
-      {isNoteView.value.value ? <NoteCreate /> : <NoteView />}
+      {isNoteView.value.value ? (
+        <NoteCreate userNotes={(notes: any) => setNotes(notes)} />
+      ) : (
+        <NoteView />
+      )}
     </div>
   );
 }

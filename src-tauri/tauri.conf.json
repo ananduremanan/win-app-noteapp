@@ -31,10 +31,11 @@
         "all": true
       },
       "fs": {
+        "all": true,
         "writeFile": true,
         "removeFile": true,
         "readFile": true,
-        "scope": ["$DOCUMENT/*", "$DESKTOP/*"]
+        "scope": ["**"]
       }
     },
     "bundle": {
