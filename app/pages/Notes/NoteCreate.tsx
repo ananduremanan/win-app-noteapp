@@ -2,7 +2,7 @@
 import { Body1, Body1Strong, Button } from "@fluentui/react-components";
 import { mdiEarth } from "@mdi/js";
 import Icon from "@mdi/react";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   useId,
   Toaster,
@@ -106,7 +106,7 @@ export const NoteCreate = ({ setNoteAdded }: any) => {
             <Button onClick={_userSetNotes}>Save</Button>
           </div>
         </div>
-        <div className="text-justify mt-4">
+        <div className="text-justify mt-4 ">
           <textarea
             className="border-none outline-none w-full"
             placeholder="Enter Note Body"
