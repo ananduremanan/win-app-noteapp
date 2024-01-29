@@ -25,7 +25,7 @@
         "setMaxSize": true
       },
       "dialog": {
-        "save": true
+        "all": false
       },
       "path": {
         "all": true
@@ -83,7 +83,7 @@
         "resizable": true,
         "title": "Note App",
         "decorations": false,
-        "minWidth": 320,
+        "minWidth": 769,
         "minHeight": 100
       }
     ]
