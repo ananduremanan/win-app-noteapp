@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Button,
   Input,
@@ -14,8 +14,16 @@ import { mdiPencil } from "@mdi/js";
 import { mdiDelete } from "@mdi/js";
 import { useStyles } from "./styles";
 import { NoteCreate } from "./NoteCreate";
-
-const IsNoteViewContext = React.createContext(true);
+import Database from "tauri-plugin-sql-api";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogSurface,
+  DialogTitle,
+  DialogBody,
+  DialogActions,
+  DialogContent,
+} from "@fluentui/react-components";
 
 const ButtonComponent = ({ children, onClick }: any) => {
   const styles = useStyles();
@@ -37,6 +45,7 @@ const SearchComponent = () => {
   );
 };
 
+// Note List
 const NoteList = ({ notes, noteView }: any) => {
   return (
     <>
@@ -58,12 +67,39 @@ const NoteList = ({ notes, noteView }: any) => {
   );
 };
 
+// Note View
 const NoteView = ({ notes, id }: any) => {
+  const [isDelete, setIsDelete] = useState(true);
   const noteData = notes.filter((item: any) => item.id === id);
-  console.log(noteData[0]);
+
+  const handleDelete = async () => {
+    alert("Called");
+    // const db = await Database.load("sqlite:test.db");
+    // await db.execute(`DELETE FROM notes WHERE id = ?`, [id]);
+  };
 
   return (
     <div className="w-full ml-4">
+      <Dialog>
+        <DialogSurface>
+          <DialogBody>
+            <DialogTitle>Dialog title</DialogTitle>
+            <DialogContent>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
+              exercitationem cumque repellendus eaque est dolor eius expedita
+              nulla ullam? Tenetur reprehenderit aut voluptatum impedit
+              voluptates in natus iure cumque eaque?
+            </DialogContent>
+            <DialogActions>
+              <DialogTrigger disableButtonEnhancement>
+                <Button appearance="secondary">Close</Button>
+              </DialogTrigger>
+              <Button appearance="primary">Do Something</Button>
+            </DialogActions>
+          </DialogBody>
+        </DialogSurface>
+      </Dialog>
+
       <div className="flex flex-row justify-between w-full">
         <div>
           <Body1Strong>{noteData[0].title}</Body1Strong>
@@ -86,20 +122,23 @@ const NoteView = ({ notes, id }: any) => {
               <Icon path={mdiPencil} size={0.8} />
               Edit
             </Button>
-            <Button>
-              <Icon path={mdiDelete} size={0.8} />
-              Delete
-            </Button>
+            <DialogTrigger disableButtonEnhancement>
+              <Button onClick={handleDelete}>
+                <Icon path={mdiDelete} size={0.8} />
+                Delete
+              </Button>
+            </DialogTrigger>
           </div>
         </div>
         <div className="text-justify mt-4">
-          <Body1>{noteData[0].content}</Body1>
+          <div>{noteData[0].content}</div>
         </div>
       </div>
     </div>
   );
 };
 
+// Main Function
 export default function Notes() {
   const [notes, setNotes] = useState([]);
   const [isNoteView, setIsNoteView] = useState(null);

@@ -36,6 +36,10 @@ export const NoteCreate = ({ userNotes }: any) => {
 
   const _userSetNotes = async () => {
     setNotAdded(false);
+    if (title === "" || body === "") {
+      notify("error");
+      return;
+    }
     const fileName: string = Math.random()
       .toString()
       .substring(2, 10)
@@ -73,13 +77,19 @@ export const NoteCreate = ({ userNotes }: any) => {
     setDate(today.toString().split(" GMT")[0]);
   }, []);
 
-  const notify = () =>
+  const notify = (type?: any) =>
     dispatchToast(
       <Toast>
-        <ToastTitle>Note Added</ToastTitle>
-        <ToastBody subtitle="Subtitle">Note Added Successfully</ToastBody>
+        <ToastTitle>
+          {type === "error" ? "User Error" : "Note Added"}
+        </ToastTitle>
+        <ToastBody>
+          {type === "error"
+            ? "Either Title or Body is Missing"
+            : "Note Added Successfully"}
+        </ToastBody>
       </Toast>,
-      { intent: "success" }
+      { intent: type === "error" ? "warning" : "success" }
     );
 
   return (
