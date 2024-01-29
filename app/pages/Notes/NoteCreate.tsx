@@ -3,7 +3,6 @@ import { Body1, Body1Strong, Button } from "@fluentui/react-components";
 import { mdiEarth } from "@mdi/js";
 import Icon from "@mdi/react";
 import React, { useState, useEffect } from "react";
-import { BaseDirectory, writeTextFile } from "@tauri-apps/api/fs";
 import {
   useId,
   Toaster,
@@ -12,39 +11,66 @@ import {
   ToastTitle,
   ToastBody,
 } from "@fluentui/react-components";
-import { Store } from "tauri-plugin-store-api";
+import Database from "tauri-plugin-sql-api";
 
 export const NoteCreate = ({ userNotes }: any) => {
   const [date, setDate] = useState("");
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
-  const [notes, setNotes] = useState<any[]>([]);
-  const [localNotes, setLocalNotes] = useState<any[]>([]);
+  const [noteAdded, setNotAdded] = useState(false);
 
   const toasterId = useId("toaster");
   const { dispatchToast } = useToastController(toasterId);
 
   const getNotes = async () => {
-    const val = await store.get("_noteData");
-    userNotes(val);
+    try {
+      const db = await Database.load("sqlite:test.db");
+      const result = await db.select<
+        Array<{ id: number; title: string; content: string }>
+      >("SELECT * FROM notes");
+      userNotes(result);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const store = new Store(".noteData.json");
-
   const _userSetNotes = async () => {
-    await store.set("_noteData", notes);
-    await store.save();
+    setNotAdded(false);
+    const fileName: string = Math.random()
+      .toString()
+      .substring(2, 10)
+      .toString();
+
+    const db = await Database.load("sqlite:test.db");
+
+    await db.execute(`
+    CREATE TABLE IF NOT EXISTS notes (
+      id TEXT PRIMARY KEY,
+      title TEXT,
+      content TEXT
+      );
+    `);
+
+    const result = await db.execute(
+      "INSERT into notes (id, title, content) VALUES ($1, $2, $3)",
+      [fileName, title, body]
+    );
+
+    if (result) {
+      notify();
+      setNotAdded(true);
+      setTitle("");
+      setBody("");
+    }
   };
 
   useEffect(() => {
-    _userSetNotes();
     getNotes();
-  }, [notes]);
+  }, [noteAdded]);
 
   useEffect(() => {
     const today: Date = new Date();
     setDate(today.toString().split(" GMT")[0]);
-    // getNotes();
   }, []);
 
   const notify = () =>
@@ -55,26 +81,6 @@ export const NoteCreate = ({ userNotes }: any) => {
       </Toast>,
       { intent: "success" }
     );
-
-  const handleSave = async () => {
-    try {
-      const fileName: string = Math.random()
-        .toString()
-        .substring(2, 10)
-        .toString();
-      const folderName: string = "noteData";
-      await writeTextFile(`${folderName}/${fileName}.txt`, body, {
-        dir: BaseDirectory.Document,
-      });
-      notify();
-      const noteData: any = { fileId: fileName, title: title };
-      setNotes([{ ...noteData }, ...notes]);
-      setTitle("");
-      setBody("");
-    } catch (error) {
-      console.error("Error Occured: ", error);
-    }
-  };
 
   return (
     <div className="w-full ml-4">
@@ -104,7 +110,7 @@ export const NoteCreate = ({ userNotes }: any) => {
             />
           </div>
           <div className="flex gap-2">
-            <Button onClick={handleSave}>Save</Button>
+            <Button onClick={_userSetNotes}>Save</Button>
           </div>
         </div>
         <div className="text-justify mt-4">

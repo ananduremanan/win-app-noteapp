@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Button,
   Input,
@@ -13,12 +13,9 @@ import { mdiEarth } from "@mdi/js";
 import { mdiPencil } from "@mdi/js";
 import { mdiDelete } from "@mdi/js";
 import { useStyles } from "./styles";
-import { signal, useSignal } from "@preact/signals-react";
-import { useSignals } from "@preact/signals-react/runtime";
 import { NoteCreate } from "./NoteCreate";
-import { Store } from "tauri-plugin-store-api";
 
-const isViewNote = signal(true);
+const IsNoteViewContext = React.createContext(true);
 
 const ButtonComponent = ({ children, onClick }: any) => {
   const styles = useStyles();
@@ -40,10 +37,7 @@ const SearchComponent = () => {
   );
 };
 
-const NoteList = ({ notes }: any) => {
-  console.clear();
-  console.log(notes);
-
+const NoteList = ({ notes, noteView }: any) => {
   return (
     <>
       <div className="mt-2 ml-1">
@@ -53,8 +47,8 @@ const NoteList = ({ notes }: any) => {
       <div className="mt-2 ml-1 flex-col">
         {notes.length > 0 &&
           notes.map((note: any, index: number) => (
-            <div className="drawer-item p-1 rounded-md" key={note.fileId}>
-              <Body1>
+            <div className="drawer-item p-1 rounded-md" key={note.id}>
+              <Body1 onClick={() => noteView(note.id)}>
                 {index + 1}. {note.title}
               </Body1>
             </div>
@@ -64,15 +58,18 @@ const NoteList = ({ notes }: any) => {
   );
 };
 
-const NoteView = ({ title, dateCreated, language, body }: any) => {
+const NoteView = ({ notes, id }: any) => {
+  const noteData = notes.filter((item: any) => item.id === id);
+  console.log(noteData[0]);
+
   return (
     <div className="w-full ml-4">
       <div className="flex flex-row justify-between w-full">
         <div>
-          <Body1Strong>Title</Body1Strong>
+          <Body1Strong>{noteData[0].title}</Body1Strong>
         </div>
         <div className="flex gap-2">
-          <Body1>26/01/2026 Friday</Body1>
+          {/* <Body1>26/01/2026 Friday</Body1> */}
           <div className="flex">
             <Icon path={mdiEarth} size={0.8} />
             <Body1>English</Body1>
@@ -82,7 +79,7 @@ const NoteView = ({ title, dateCreated, language, body }: any) => {
       <div className="bg-white mt-2 p-4 rounded-md">
         <div className="flex justify-between">
           <div>
-            <Body1Strong>A Note On Human Behaviour</Body1Strong>
+            <Body1Strong>{noteData[0].title}</Body1Strong>
           </div>
           <div className="flex gap-2">
             <Button>
@@ -96,7 +93,7 @@ const NoteView = ({ title, dateCreated, language, body }: any) => {
           </div>
         </div>
         <div className="text-justify mt-4">
-          <Body1>Body</Body1>
+          <Body1>{noteData[0].content}</Body1>
         </div>
       </div>
     </div>
@@ -104,25 +101,30 @@ const NoteView = ({ title, dateCreated, language, body }: any) => {
 };
 
 export default function Notes() {
-  useSignals();
-  const isNoteView = useSignal(isViewNote);
-
   const [notes, setNotes] = useState([]);
+  const [isNoteView, setIsNoteView] = useState(null);
 
   return (
     <div className="flex flex-row overflow-hidden">
       <div className="flex-col w-1/3">
         <div className="flex gap-2 justify-between">
-          <ButtonComponent>Add New Note</ButtonComponent>
+          <ButtonComponent onClick={() => setIsNoteView(null)}>
+            Add New Note
+          </ButtonComponent>
           <ButtonComponent>Add New Todo</ButtonComponent>
         </div>
         <SearchComponent />
-        <NoteList notes={notes} />
+        <NoteList
+          notes={notes}
+          noteView={(value: any) => {
+            setIsNoteView(value);
+          }}
+        />
       </div>
-      {isNoteView.value.value ? (
+      {isNoteView === null ? (
         <NoteCreate userNotes={(notes: any) => setNotes(notes)} />
       ) : (
-        <NoteView />
+        <NoteView notes={notes} id={isNoteView} />
       )}
     </div>
   );
