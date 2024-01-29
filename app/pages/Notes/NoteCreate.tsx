@@ -13,29 +13,16 @@ import {
 } from "@fluentui/react-components";
 import Database from "tauri-plugin-sql-api";
 
-export const NoteCreate = ({ userNotes }: any) => {
+export const NoteCreate = ({ setNoteAdded }: any) => {
   const [date, setDate] = useState("");
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
-  const [noteAdded, setNotAdded] = useState(false);
 
   const toasterId = useId("toaster");
   const { dispatchToast } = useToastController(toasterId);
 
-  const getNotes = async () => {
-    try {
-      const db = await Database.load("sqlite:test.db");
-      const result = await db.select<
-        Array<{ id: number; title: string; content: string }>
-      >("SELECT * FROM notes");
-      userNotes(result);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   const _userSetNotes = async () => {
-    setNotAdded(false);
+    setNoteAdded(false);
     if (title === "" || body === "") {
       notify("error");
       return;
@@ -62,15 +49,11 @@ export const NoteCreate = ({ userNotes }: any) => {
 
     if (result) {
       notify();
-      setNotAdded(true);
+      setNoteAdded(true);
       setTitle("");
       setBody("");
     }
   };
-
-  useEffect(() => {
-    getNotes();
-  }, [noteAdded]);
 
   useEffect(() => {
     const today: Date = new Date();

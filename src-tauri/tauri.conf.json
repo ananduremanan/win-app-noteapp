@@ -25,7 +25,7 @@
         "setMaxSize": true
       },
       "dialog": {
-        "all": false
+        "all": true
       },
       "path": {
         "all": true
