@@ -46,6 +46,10 @@ body {
   background-color: #eaeaea;
 }
 
+.drawer-active {
+  background-color: #eaeaea;
+}
+
 .fab {
   background-color: #eaeaea;
 }
