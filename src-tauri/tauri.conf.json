@@ -36,6 +36,9 @@
         "removeFile": true,
         "readFile": true,
         "scope": ["**"]
+      },
+      "notification": {
+        "all": true
       }
     },
     "bundle": {
