@@ -13,10 +13,17 @@ import {
 } from "@fluentui/react-components";
 import Database from "tauri-plugin-sql-api";
 
-export const NoteCreate = ({ setNoteAdded }: any) => {
+export const NoteCreate = ({ setNoteAdded, isEditValue }: any) => {
   const [date, setDate] = useState("");
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
+
+  useEffect(() => {
+    if (isEditValue) {
+      setTitle(isEditValue.title);
+      setBody(isEditValue.content);
+    }
+  }, [isEditValue]);
 
   const toasterId = useId("toaster");
   const { dispatchToast } = useToastController(toasterId);
@@ -27,31 +34,43 @@ export const NoteCreate = ({ setNoteAdded }: any) => {
       notify("error");
       return;
     }
-    const fileName: string = Math.random()
-      .toString()
-      .substring(2, 10)
-      .toString();
-
     const db = await Database.load("sqlite:test.db");
 
-    await db.execute(`
-    CREATE TABLE IF NOT EXISTS notes (
-      id TEXT PRIMARY KEY,
-      title TEXT,
-      content TEXT
+    if (isEditValue) {
+      const result = await db.execute(
+        "UPDATE notes SET title = ?, content = ? WHERE id = ?",
+        [title, body, isEditValue.id]
       );
-    `);
+      if (result) {
+        notify();
+        setNoteAdded(true);
+        setTitle("");
+        setBody("");
+      }
+    } else {
+      const fileName: string = Math.random()
+        .toString()
+        .substring(2, 10)
+        .toString();
+      await db.execute(`
+        CREATE TABLE IF NOT EXISTS notes (
+          id TEXT PRIMARY KEY,
+          title TEXT,
+          content TEXT
+          );
+        `);
 
-    const result = await db.execute(
-      "INSERT into notes (id, title, content) VALUES ($1, $2, $3)",
-      [fileName, title, body]
-    );
+      const result = await db.execute(
+        "INSERT into notes (id, title, content) VALUES ($1, $2, $3)",
+        [fileName, title, body]
+      );
 
-    if (result) {
-      notify();
-      setNoteAdded(true);
-      setTitle("");
-      setBody("");
+      if (result) {
+        notify();
+        setNoteAdded(true);
+        setTitle("");
+        setBody("");
+      }
     }
   };
 
@@ -99,11 +118,13 @@ export const NoteCreate = ({ setNoteAdded }: any) => {
               onInput={(event: any) => {
                 setTitle(event.target.value);
               }}
-              value={title}
+              defaultValue={isEditValue ? isEditValue.title : title}
             />
           </div>
           <div className="flex gap-2">
-            <Button onClick={_userSetNotes}>Save</Button>
+            <Button onClick={_userSetNotes}>
+              {isEditValue ? "Update" : "Save"}
+            </Button>
           </div>
         </div>
         <div className="text-justify mt-4 ">
@@ -114,7 +135,7 @@ export const NoteCreate = ({ setNoteAdded }: any) => {
             onInput={(event: any) => {
               setBody(event.target.value);
             }}
-            value={body}
+            defaultValue={isEditValue ? isEditValue.content : body}
           />
         </div>
       </div>

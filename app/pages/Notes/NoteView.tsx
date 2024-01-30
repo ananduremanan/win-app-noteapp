@@ -1,14 +1,26 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Button, Body1, Body1Strong } from "@fluentui/react-components";
 import Icon from "@mdi/react";
 import { mdiEarth } from "@mdi/js";
 import { mdiPencil } from "@mdi/js";
 import { DeleteDialog } from "./DeleteDialog";
+import { useDispatch } from "react-redux";
+import { setIsEditValue } from "@/app/redux/slice";
+
+interface NoteViewProps {
+  notes: any[];
+  id: string;
+  setNoteAdded: any;
+}
 
 // Note View
-export const NoteView = ({ notes, id, setNoteAdded }: any) => {
+export const NoteView = ({ notes, id, setNoteAdded }: NoteViewProps) => {
   const noteData = notes.filter((item: any) => item.id === id);
+
+  let lines = noteData[0].content.split("\n");
+
+  const dispatch = useDispatch();
 
   return (
     <div className="w-full ml-4">
@@ -30,7 +42,11 @@ export const NoteView = ({ notes, id, setNoteAdded }: any) => {
             <Body1Strong>{noteData[0].title}</Body1Strong>
           </div>
           <div className="flex gap-2">
-            <Button>
+            <Button
+              onClick={() => {
+                dispatch(setIsEditValue(noteData[0]));
+              }}
+            >
               <Icon path={mdiPencil} size={0.8} />
               Edit
             </Button>
@@ -41,7 +57,11 @@ export const NoteView = ({ notes, id, setNoteAdded }: any) => {
           </div>
         </div>
         <div className="text-justify mt-4">
-          <div>{noteData[0].content}</div>
+          <div id="content">
+            {lines.map((line: any, index: any) => (
+              <p key={index}>{line}</p>
+            ))}
+          </div>
         </div>
       </div>
     </div>
