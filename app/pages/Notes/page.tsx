@@ -16,6 +16,15 @@ export default function Notes() {
   const [noteAdded, setNoteAdded] = useState(false);
 
   const state = useSelector((state: RootState) => state.state.state);
+  const isEditValue = useSelector(
+    (state: RootState) => state.state.isEditValue
+  );
+
+  useEffect(() => {
+    if (isEditValue != null) {
+      setIsNoteView(null);
+    }
+  }, [isEditValue]);
 
   const getNotes = async () => {
     try {
@@ -52,7 +61,10 @@ export default function Notes() {
         />
       </div>
       {isNoteView === null ? (
-        <NoteCreate setNoteAdded={(value: any) => setNoteAdded(value)} />
+        <NoteCreate
+          setNoteAdded={(value: any) => setNoteAdded(value)}
+          isEditValue={isEditValue != null && isEditValue}
+        />
       ) : (
         <NoteView
           notes={notes}
