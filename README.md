@@ -24,8 +24,9 @@ cargo tauri dev
 ## Screenshots
 
 ![App Screenshot](https://raw.githubusercontent.com/ananduremanan/Demo/main/Screenshot%20(8).png)
-
 Figure Note App Running In Windows. 
+
+![App Screenshot](https://raw.githubusercontent.com/ananduremanan/Demo/main/Screenshot%20(10).png)
 
 
 ## Badges
