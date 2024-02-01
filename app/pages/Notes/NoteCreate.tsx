@@ -18,10 +18,15 @@ export const NoteCreate = ({ setNoteAdded, isEditValue }: any) => {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
 
+  console.log(isEditValue);
+
   useEffect(() => {
     if (isEditValue) {
       setTitle(isEditValue.title);
       setBody(isEditValue.content);
+    } else {
+      setTitle("");
+      setBody("");
     }
   }, [isEditValue]);
 
@@ -37,16 +42,16 @@ export const NoteCreate = ({ setNoteAdded, isEditValue }: any) => {
     const db = await Database.load("sqlite:test.db");
 
     if (isEditValue) {
-      const result = await db.execute(
-        "UPDATE notes SET title = ?, content = ? WHERE id = ?",
-        [title, body, isEditValue.id]
-      );
-      if (result) {
-        notify();
-        setNoteAdded(true);
-        setTitle("");
-        setBody("");
-      }
+      await db.execute("UPDATE notes SET title = ?, content = ? WHERE id = ?", [
+        title,
+        body,
+        isEditValue.id,
+      ]);
+
+      notify();
+      setNoteAdded(true);
+      setTitle("");
+      setBody("");
     } else {
       const fileName: string = Math.random()
         .toString()

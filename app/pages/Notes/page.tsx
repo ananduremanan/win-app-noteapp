@@ -2,12 +2,13 @@
 import React, { useEffect, useState } from "react";
 import { NoteCreate } from "./NoteCreate";
 import Database from "tauri-plugin-sql-api";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
 import { NoteList } from "./NoteList";
 import { ButtonComponent } from "./ButtonComponent";
 import { SearchComponent } from "./SearchComponent";
 import { NoteView } from "./NoteView";
+import { setIsEditValue } from "@/app/redux/slice";
 
 // Main Function
 export default function Notes() {
@@ -19,6 +20,8 @@ export default function Notes() {
   const isEditValue = useSelector(
     (state: RootState) => state.state.isEditValue
   );
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (isEditValue != null) {
@@ -44,10 +47,15 @@ export default function Notes() {
   }, [noteAdded, state]);
 
   return (
-    <div className="flex flex-row overflow-hidden">
+    <div className="flex overflow-hidden children-wrapper pl-6 pr-2 flex-row">
       <div className="flex-col w-1/3">
         <div className="flex gap-2 justify-between">
-          <ButtonComponent onClick={() => setIsNoteView(null)}>
+          <ButtonComponent
+            onClick={() => {
+              setIsNoteView(null);
+              dispatch(setIsEditValue(null));
+            }}
+          >
             Add New Note
           </ButtonComponent>
           <ButtonComponent>Add New Todo</ButtonComponent>
