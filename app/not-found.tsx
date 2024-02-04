@@ -8,7 +8,7 @@ export default function Notfound() {
       <Image src={"/working.png"} width={100} height={100} alt="working on" />
       <div>Hey, Thanks For Exploring Our App.</div>
       <div className="text-xs">
-        If your'e seeing this message, it means our devs are working hard to
+        If your&apose seeing this message, it means our devs are working hard to
         brought this feature to you.
       </div>
       <div className="text-xs -mt-4">

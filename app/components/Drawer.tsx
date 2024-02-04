@@ -72,14 +72,14 @@ export default function Drawer() {
       </div>
       <div className="mt-auto">
         <Link
-          href={"/SignIn"}
+          href={"/pages/SignIn"}
           className={`flex items-center gap-4 p-2 drawer-item rounded-md mb-1 justify-center lg:justify-start`}
         >
           <BsPerson />
           <div className="hidden lg:block">Sign In</div>
         </Link>
         <Link
-          href={"/Setting"}
+          href={"/pages/Settings"}
           className={`flex items-center p-2 drawer-item gap-4 rounded-md mb-1 justify-center lg:justify-start`}
         >
           <LuSettings />
