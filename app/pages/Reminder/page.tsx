@@ -8,32 +8,6 @@ import {
   Switch,
   Text,
 } from "@fluentui/react-components";
-import { notification } from "@tauri-apps/api";
-
-// // Define the notification
-// const notify = () => {
-//   notification.sendNotification({
-//     title: "Scheduled Notification",
-//     body: "This is a scheduled notification",
-//   });
-// };
-
-// // Set the desired date and time
-// const desiredDate = new Date("2024-01-030T20:55:00"); // Format: YYYY-MM-DDTHH:mm:ss
-
-// // Get the current date and time
-// const currentDate = new Date();
-
-// // Calculate the delay (in milliseconds)
-// const delay = desiredDate.getTime() - currentDate.getTime();
-
-// // Check if the desired date is in the future
-// if (delay > 0) {
-//   // Use setTimeout to trigger the notification after the calculated delay
-//   setTimeout(notify, delay);
-// } else {
-//   console.log("Desired date is in the past");
-// }
 
 export default function Reminder() {
   return (
@@ -49,14 +23,16 @@ export default function Reminder() {
           <CardHeader
             header={
               <Text weight="semibold">
-                <div className="text-2xl font-bold">Keerthi's Birthday</div>
+                <div className="text-2xl font-bold">
+                  Someone&apos;s Birthday
+                </div>
               </Text>
             }
             action={<Switch checked />}
           />
           <CardPreview className="-mt-4">
             <div className="p-4">
-              <div className="text-lg">Keerthi's Birthday</div>
+              <div className="text-lg">Someone&apos;s Birthday</div>
               <div className="font-bold">7:30 AM March 12 2024</div>
               <div className="text-gray-400 text-xs mt-2">
                 in 18 days 12 Hours 15 Minute
@@ -75,7 +51,7 @@ export default function Reminder() {
           />
           <CardPreview className="-mt-4">
             <div className="p-4">
-              <div className="text-lg">Exam @ 3 O' Clock</div>
+              <div className="text-lg">Exam @ 3 O&apos Clock</div>
               <div className="font-bold">3:30 AM March 12 2024</div>
               <div className="text-gray-400 text-xs mt-2">
                 in 18 days 12 Hours 15 Minute
