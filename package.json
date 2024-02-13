@@ -9,7 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fluentui/react-calendar-compat": "^0.0.20",
     "@fluentui/react-components": "^9.44.5",
+    "@fluentui/react-datepicker-compat": "^0.4.23",
+    "@fluentui/react-timepicker-compat": "^0.1.9",
     "@mdi/js": "^7.4.47",
     "@mdi/react": "^1.6.1",
     "@preact/signals-react": "^2.0.0",

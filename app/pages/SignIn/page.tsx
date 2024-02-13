@@ -9,7 +9,6 @@ export default function SignIn() {
         <Caption1Strong>
           <div className="text-lg">Sign In</div>
         </Caption1Strong>
-        <Button>Track</Button>
       </div>
       <div className="justify-center items-center flex flex-col">
         <Image
