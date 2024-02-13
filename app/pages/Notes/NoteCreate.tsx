@@ -2,7 +2,7 @@
 import { Body1, Body1Strong, Button } from "@fluentui/react-components";
 import { mdiEarth } from "@mdi/js";
 import Icon from "@mdi/react";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import {
   useId,
   Toaster,
@@ -17,8 +17,6 @@ export const NoteCreate = ({ setNoteAdded, isEditValue }: any) => {
   const [date, setDate] = useState("");
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
-
-  console.log(isEditValue);
 
   useEffect(() => {
     if (isEditValue) {

@@ -8,7 +8,8 @@ import {
   RendererProvider,
   createDOMRenderer,
   renderToStyleElements,
-  webLightTheme,
+  teamsLightTheme,
+  Dialog
 } from "@fluentui/react-components";
 import { useServerInsertedHTML } from "next/navigation";
 import { RootState, store } from "./redux/store";
@@ -25,7 +26,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <Provider store={store}>
       <RendererProvider renderer={renderer}>
         <SSRProvider>
-          <FluentProvider theme={webLightTheme} className="ml-1">
+          <FluentProvider theme={teamsLightTheme} className="ml-1">
             {children}
           </FluentProvider>
         </SSRProvider>
