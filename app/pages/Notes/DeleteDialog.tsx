@@ -48,7 +48,7 @@ export const DeleteDialog = ({ id }: any) => {
             </DialogTrigger>
             <DialogTrigger disableButtonEnhancement>
               <Button appearance="primary" onClick={handleDelete}>
-                Yes, I&aposm sure
+                Yes, Im sure
               </Button>
             </DialogTrigger>
           </DialogActions>
