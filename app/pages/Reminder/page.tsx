@@ -18,6 +18,7 @@ import {
   DialogContent,
   Input,
   useId,
+  Spinner,
 } from "@fluentui/react-components";
 import {
   isPermissionGranted,
@@ -38,6 +39,7 @@ import {
   ToastTitle,
   ToastBody,
 } from "@fluentui/react-components";
+import Database from "tauri-plugin-sql-api";
 
 export default function Reminder() {
   const styles = useStyles();
@@ -48,14 +50,30 @@ export default function Reminder() {
   const [selectedDate, setSelectedDate] = React.useState<Date>(new Date());
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  // const [selectedTime, setSelectedTime] = React.useState<any>();
-
+  const [reminders, setReminders] = React.useState<any[]>([]);
   const [selectedTime, setSelectedTime] = React.useState<Date | null>(null);
   const [timePickerValue, setTimePickerValue] = React.useState<string>(
     selectedTime ? formatDateToTimeString(selectedTime) : ""
   );
-
   const [open, setOpen] = React.useState(false);
+  const [reminderAdded, setReminderAdded] = React.useState(false);
+  const [isFetching, setIsFetching] = React.useState(true);
+
+  const fetchReminders = async () => {
+    try {
+      setIsFetching(true);
+      const db = await Database.load("sqlite:test.db");
+      const result = await db.select<
+        Array<{ id: number; title: string; content: string }>
+      >("SELECT * FROM reminders");
+      console.log("reminders", result);
+      setReminders(result);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsFetching(false);
+    }
+  };
 
   const checkNotificationPermission = async () => {
     let permissionGranted = await isPermissionGranted();
@@ -64,11 +82,13 @@ export default function Reminder() {
       const permission = await requestPermission();
       permissionGranted = permission === "granted";
     }
-    // if (permissionGranted) {
-    //   sendNotification("Tauri is awesome!");
-    //   sendNotification({ title: "TAURI", body: "Tauri is awesome!" });
-    // }
   };
+
+  // useEffect(() => {
+  //   if (!open) {
+  //     fetchReminders();
+  //   }
+  // }, [reminderAdded]);
 
   useEffect(() => {
     checkNotificationPermission();
@@ -94,38 +114,66 @@ export default function Reminder() {
       notify("error", "Title");
       setOpen(true);
       return;
-    }
-    const reminder = {
-      title: title,
-      description: description,
-      date: selectedDate,
-      time: timePickerValue,
-    };
-
-    const userTime = new Date(`${reminder.date} ${reminder.time}`);
-    const currentTime = new Date();
-
-    const delay = userTime.getTime() - currentTime.getTime();
-
-    console.log("delay", delay, "userTime", userTime);
-
-    if (delay > 0) {
-      setTimeout(() => {
-        sendNotification({
-          title: reminder.title,
-          body: reminder.description,
-        });
-      }, delay);
     } else {
-      console.log("The specified time is in the past.");
-    }
+      try {
+        const db = await Database.load("sqlite:test.db");
 
-    console.log({
-      title: title,
-      description: description,
-      date: selectedDate,
-      time: timePickerValue,
-    });
+        await db.execute(`
+        CREATE TABLE IF NOT EXISTS reminders (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          title TEXT,
+          description TEXT,
+          date TEXT,
+          isActive INTEGER
+          );
+        `);
+
+        const reminder = {
+          title: title,
+          description: description,
+          date: selectedDate,
+          time: timePickerValue,
+        };
+
+        const [hours, minutes] = reminder.time.split(":");
+
+        reminder.date.setHours(parseInt(hours, 10));
+        reminder.date.setMinutes(parseInt(minutes, 10));
+        reminder.date.setSeconds(0);
+
+        const currentTime = new Date().getTime();
+        const notificationTime = reminder.date.getTime();
+        const delay = notificationTime - currentTime;
+
+        if (delay > 0) {
+          setTimeout(() => {
+            sendNotification({
+              title: reminder.title,
+              body: reminder.description,
+            });
+          }, delay);
+
+          const dateString = `${selectedDate}T${timePickerValue}`;
+
+          const result = await db.execute(
+            "INSERT into reminders (title, description, date, isActive) VALUES ($1, $2, $3, $4)",
+            [title, description, dateString, 1]
+          );
+
+          if (result) {
+            notify("success", "Reminder Added Successfully");
+            setReminderAdded(true);
+          }
+        } else {
+          notify("error", "The specified time is in the past");
+          return;
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setOpen(false);
+      }
+    }
   };
 
   const onTimeChange: TimePickerProps["onTimeChange"] = (_ev, data) => {
@@ -138,6 +186,11 @@ export default function Reminder() {
 
   return (
     <section className="children-wrapper pl-6 pr-2 flex flex-col gap-4">
+      {isFetching && (
+        <div className="flex items-center gap-2">
+          <Spinner size="small" label={"Fetching Reminders Please Wait..."} />
+        </div>
+      )}
       <Toaster toasterId={toasterId} />
       <Dialog
         modalType="non-modal"
@@ -176,6 +229,7 @@ export default function Reminder() {
                   value={timePickerValue}
                   freeform
                   onInput={onTimePickerInput}
+                  hourCycle="h24"
                 />
                 <Input
                   id={inputId}
