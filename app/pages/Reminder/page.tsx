@@ -23,6 +23,7 @@ export default function Reminder() {
   const [reminderAdded, setReminderAdded] = React.useState(false);
   const [isFetching, setIsFetching] = React.useState(false);
   const [singleReminderData, setSingleReminderData] = React.useState<any[]>();
+  const [isPermission, setIsPermission] = useState(false);
 
   const singleFetch = async (id: any) => {
     try {
@@ -53,7 +54,9 @@ export default function Reminder() {
 
   const checkNotificationPermission = async () => {
     let permissionGranted = await isPermissionGranted();
+    await setIsPermission(permissionGranted);
     if (!permissionGranted) {
+      alert("Notifictaion Permission Denied By OS!!");
       const permission = await requestPermission();
       permissionGranted = permission === "granted";
     }
@@ -76,6 +79,7 @@ export default function Reminder() {
         isOpen={open}
         openClose={(value: boolean) => setOpen(value)}
         data={singleReminderData && singleReminderData}
+        permisssion={isPermission}
       />
 
       {isFetching ? (

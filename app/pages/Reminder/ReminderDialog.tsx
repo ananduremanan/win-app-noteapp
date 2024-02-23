@@ -26,12 +26,14 @@ import React, { useEffect, useState } from "react";
 import { useStyles } from "./styles";
 import Database from "tauri-plugin-sql-api";
 import { sendNotification } from "@tauri-apps/api/notification";
+import { DeleteDialog } from "./DeleteDialog";
 
 export default function ReminderDialog({
   reminderAdded,
   isOpen,
   openClose,
   data,
+  permisssion,
 }: any) {
   const styles = useStyles();
   const inputId = useId("input");
@@ -116,12 +118,14 @@ export default function ReminderDialog({
         const delay = notificationTime - currentTime;
 
         if (delay > 0) {
-          setTimeout(() => {
-            sendNotification({
-              title: reminder.title,
-              body: reminder.description,
-            });
-          }, delay);
+          if (permisssion) {
+            setTimeout(() => {
+              sendNotification({
+                title: reminder.title,
+                body: reminder.description,
+              });
+            }, delay);
+          }
 
           const dateString = `${selectedDate}T${timePickerValue}`;
 
@@ -150,11 +154,6 @@ export default function ReminderDialog({
     }
   };
 
-  const handleDelete = async (id: any) => {
-    const db = await Database.load("sqlite:test.db");
-    await db.execute(`DELETE FROM reminders WHERE id = ?`, [id]);
-  };
-
   return (
     <React.Fragment>
       <Toaster toasterId={toasterId} />
@@ -177,13 +176,7 @@ export default function ReminderDialog({
               <div className="flex justify-between">
                 <div>Add New Reminder</div>
                 {dataFetched && dataFetched.id && (
-                  <Button
-                    onClick={() => {
-                      handleDelete(dataFetched.id);
-                    }}
-                  >
-                    Delete
-                  </Button>
+                  <DeleteDialog id={dataFetched.id} />
                 )}
               </div>
             </DialogTitle>
