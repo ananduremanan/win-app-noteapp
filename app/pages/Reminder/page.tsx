@@ -16,6 +16,9 @@ import {
 
 import Database from "tauri-plugin-sql-api";
 import ReminderDialog from "./ReminderDialog";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/app/redux/store";
+import { setIsDeletedReminder } from "@/app/redux/slice";
 
 export default function Reminder() {
   const [reminders, setReminders] = React.useState<any[]>([]);
@@ -24,6 +27,9 @@ export default function Reminder() {
   const [isFetching, setIsFetching] = React.useState(false);
   const [singleReminderData, setSingleReminderData] = React.useState<any[]>();
   const [isPermission, setIsPermission] = useState(false);
+
+  const reminderState = useSelector((state: RootState) => state.state.state);
+  const dispatch = useDispatch();
 
   const singleFetch = async (id: any) => {
     try {
@@ -69,6 +75,14 @@ export default function Reminder() {
   useEffect(() => {
     checkNotificationPermission();
   }, []);
+
+  useEffect(() => {
+    if (reminderState) {
+      fetchReminders();
+      dispatch(setIsDeletedReminder(false));
+      setOpen(false);
+    }
+  }, [reminderState]);
 
   return (
     <section className="children-wrapper pl-6 pr-2 flex flex-col gap-4">
