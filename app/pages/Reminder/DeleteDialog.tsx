@@ -13,23 +13,21 @@ import {
   DialogContent,
 } from "@fluentui/react-components";
 import Database from "tauri-plugin-sql-api";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/app/redux/store";
-import { toggleState } from "@/app/redux/slice";
+import { useDispatch } from "react-redux";
+import { setIsDeletedReminder } from "@/app/redux/slice";
 
 export const DeleteDialog = ({ id }: any) => {
   const dispatch = useDispatch();
-  const state = useSelector((state: RootState) => state.state.state);
-
-  //   const handleDelete = async () => {
-  //     const db = await Database.load("sqlite:test.db");
-  //     await db.execute(`DELETE FROM notes WHERE id = ?`, [id]);
-  //     dispatch(toggleState(!state));
-  //   };
 
   const handleDelete = async (id: any) => {
-    const db = await Database.load("sqlite:test.db");
-    await db.execute(`DELETE FROM reminders WHERE id = ?`, [id]);
+    try {
+      const db = await Database.load("sqlite:test.db");
+      await db.execute(`DELETE FROM reminders WHERE id = ?`, [id]);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      dispatch(setIsDeletedReminder(true));
+    }
   };
 
   return (

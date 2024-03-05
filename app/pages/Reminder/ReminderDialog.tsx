@@ -50,8 +50,6 @@ export default function ReminderDialog({
   const [description, setDescription] = useState("");
   const [dataFetched, setDataFetched] = useState<any>({});
 
-  console.log(dataFetched);
-
   useEffect(() => {
     setOpen(isOpen);
   }, [isOpen]);
