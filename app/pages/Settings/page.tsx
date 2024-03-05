@@ -8,7 +8,6 @@ import {
   Dropdown,
   Option,
   Title1,
-  makeStyles,
   useId,
 } from "@fluentui/react-components";
 import React from "react";
@@ -16,8 +15,7 @@ import { CiLight } from "react-icons/ci";
 import { BsPerson } from "react-icons/bs";
 import { MdOutlinePrivacyTip } from "react-icons/md";
 import { GoBell } from "react-icons/go";
-
-const useStyles = makeStyles({});
+import Link from "next/link";
 
 export default function Settings() {
   const [selectedTheme, setSelectedTheme] = React.useState("System");
@@ -129,7 +127,6 @@ export default function Settings() {
               <div className="p-2 flex justify-between items-center">
                 <div>
                   <div className="flex items-center gap-2">
-                    {/* <MdOutlinePrivacyTip size={20} /> */}
                     <div>
                       <Caption1Strong>Note App For Windows</Caption1Strong>
                       <div className="text-xs text-gray-400">V 0.0.12-Beta</div>
@@ -137,9 +134,14 @@ export default function Settings() {
                   </div>
                 </div>
                 <div>
-                  <Caption1>
-                    <div className="text-blue-500">Send FeedBack</div>
-                  </Caption1>
+                  <Link
+                    href={"https://note-app-website.pages.dev/#contact"}
+                    target="_blank"
+                  >
+                    <Caption1>
+                      <div className="text-blue-500">Send FeedBack</div>
+                    </Caption1>
+                  </Link>
                 </div>
               </div>
             </Card>
