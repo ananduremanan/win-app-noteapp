@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Card,
   CardHeader,
@@ -8,6 +8,12 @@ import {
   Spinner,
   Switch,
   Text,
+  Toast,
+  ToastBody,
+  ToastTitle,
+  Toaster,
+  useId,
+  useToastController,
 } from "@fluentui/react-components";
 import {
   isPermissionGranted,
@@ -30,6 +36,27 @@ export default function Reminder() {
 
   const reminderState = useSelector((state: RootState) => state.state.state);
   const dispatch = useDispatch();
+
+  const toasterId = useId("toaster");
+  const { dispatchToast } = useToastController(toasterId);
+
+  const notify = useCallback(
+    (type?: string, value?: string) =>
+      dispatchToast(
+        <Toast>
+          <ToastTitle>
+            {type === "error" ? "User Error" : "Note Added"}
+          </ToastTitle>
+          <ToastBody>
+            {type === "error"
+              ? `${value} is Missing`
+              : "Note Added Successfully"}
+          </ToastBody>
+        </Toast>,
+        { intent: type === "error" ? "warning" : "success" }
+      ),
+    [dispatchToast]
+  );
 
   const singleFetch = async (id: any) => {
     try {
@@ -81,11 +108,13 @@ export default function Reminder() {
       fetchReminders();
       dispatch(setIsDeletedReminder(false));
       setOpen(false);
+      notify("success", "Reminder Deleted Successfully");
     }
   }, [reminderState]);
 
   return (
     <section className="children-wrapper pl-6 pr-2 flex flex-col gap-4">
+      <Toaster toasterId={toasterId} />
       <ReminderDialog
         reminderAdded={(value: any) => {
           setReminderAdded(value);
